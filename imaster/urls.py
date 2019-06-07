@@ -2,7 +2,8 @@ from django.urls import path
 from .views import (
     index, about, appointment,
     blogsingle, blog, contact,
-    department, doctor, pricing,
+    department,pricing,
+    DoctorViewList, DoctorDetailView,
     )
 
 
@@ -14,6 +15,7 @@ urlpatterns = [
     path('blog/', blog, name="blog"),
     path('contact/', contact, name="contact"),
     path('department/', department, name="department"),
-    path('doctor/', doctor, name="doctor"),
+    path('doctor/', DoctorViewList.as_view(), name="doctor"),
+    path('doctor/<int:pk>/',DoctorDetailView.as_view(), name="doctor-detail"),
     path('pricing/', pricing, name="pricing"),
 ]

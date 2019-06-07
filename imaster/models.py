@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils import timezone
+from django.urls import reverse
 from django.contrib.auth.models import AbstractUser
 from django.contrib.postgres.fields import IntegerRangeField
 
@@ -81,7 +82,7 @@ class Doctor(models.Model):
     default_profile_image = 'profile.jpg'
     photo = models.ImageField(
         default=default_profile_image,
-        upload_to=upload_to,
+        upload_to='static/images',
         null=True,
         blank=True
     )
@@ -90,4 +91,7 @@ class Doctor(models.Model):
     company = models.ManyToManyField(Company)
 
     def __str__(self):
-        return self.doctor
+        return '%s' % self.doctor
+
+    def get_absolute_url(self):
+        return reverse('doctor-detail', kwargs={"pk": self.pk})
