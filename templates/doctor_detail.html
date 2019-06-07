@@ -1,0 +1,16 @@
+{% extends "bases/base.html" %}
+{% load static %}
+
+{% block content %}
+
+
+
+    <img src="{{object.photo.url}}" style="width: 300px;" alt="">
+
+    {{object.doctor}}
+    {{object.category}}
+    {{object.post.info}}
+    {{object.post.place_of_work}}
+    <!-- {{object.company.name}} -->
+
+{% endblock %}
