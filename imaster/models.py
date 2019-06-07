@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 from django.contrib.auth.models import AbstractUser
 from django.contrib.postgres.fields import IntegerRangeField
 
@@ -14,10 +15,11 @@ def upload_to(instance, filename):
 
 
 class Company(models.Model):
+    owner = models.ForeignKey(User, on_delete=models.DO_NOTHING)
     default_profile_image = 'profile.jpg'
     logo = models.ImageField(
         default=default_profile_image,
-        upload_to=upload_to,
+        upload_to='static/images',
         null=True,
         blank=True
     )
@@ -25,17 +27,16 @@ class Company(models.Model):
     address = models.CharField(max_length=255)
     ages = IntegerRangeField()
     start = models.DateTimeField()
-    CHOICES =[
-        ('ages', ages),
-        ('start', start),
-    ]
-    time_of_work = models.CharField(choices=CHOICES, max_length=255)
+
+
+    def __str__(self):
+        return self.name
 
 
 
 class Category(models.Model):
     title = models.CharField(max_length=255,)
-    category = models.ForeignKey('self', related_name="categ", on_delete=models.CASCADE, null=False, blank=True)
+    category = models.ForeignKey('self', related_name="categ", on_delete=models.CASCADE, null=True, blank=True)
 
 
     def __str__(self):
@@ -51,6 +52,27 @@ class Post(models.Model):
     education = models.TextField()
     treatment_of_diseases = models.TextField()
     shedule = models.TextField()
+
+
+    def __str__(self):
+        return self.info
+
+
+
+class Comment(models.Model):
+    post = models.ForeignKey(Post, related_name="comments", on_delete=models.CASCADE)
+    author = models.ForeignKey(User, related_name="comments", on_delete=models.SET_NULL, null=True)
+    text = models.TextField()
+    created_date = models.DateTimeField(default=timezone.now)
+    approved_comment = models.BooleanField(default=False)
+
+
+    def approve(comment):
+        self.approved_comment = True
+        self.save()
+
+    def __str__(self):
+        return self.text
 
 
 
